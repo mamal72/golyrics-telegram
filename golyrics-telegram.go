@@ -12,6 +12,10 @@ import (
 	"github.com/tucnak/telebot"
 )
 
+func getTrackTitle(track *golyrics.Track) string {
+	return fmt.Sprintf("%s:%s", track.Artist, track.Name)
+}
+
 func onStart(bot *telebot.Bot, message *telebot.Message) {
 	bot.SendMessage(
 		message.Chat,
@@ -55,11 +59,34 @@ func onNoTextMessage(bot *telebot.Bot, message *telebot.Message) {
 }
 
 func sendLyrics(bot *telebot.Bot, message *telebot.Message, track *golyrics.Track) {
+	if len(track.Lyrics) == 0 {
+		track.Lyrics = fmt.Sprintf("No lyrics found for %s:%s! ☹️\nIt may be an album, not a track!", track.Artist, track.Name)
+	}
 	bot.SendMessage(
 		message.Chat,
 		fmt.Sprintf("🎵 *%s* by *%s*:\n\n%s", track.Name, track.Artist, track.Lyrics),
 		&telebot.SendOptions{
 			ParseMode: telebot.ModeMarkdown,
+		},
+	)
+}
+
+func sendSuggestions(bot *telebot.Bot, message *telebot.Message, query string, suggestions *[]golyrics.Track) {
+	replyKeyboard := [][]string{}
+	for _, track := range *suggestions {
+		trackTitle := getTrackTitle(&track)
+		replyKeyboard = append(replyKeyboard, []string{trackTitle})
+	}
+	bot.SendMessage(
+		message.Chat,
+		fmt.Sprintf("Found *%d* items for \"*%s*\". Which one is it?", len(*suggestions), query),
+		&telebot.SendOptions{
+			ParseMode: telebot.ModeMarkdown,
+			ReplyMarkup: telebot.ReplyMarkup{
+				ForceReply:      true,
+				OneTimeKeyboard: true,
+				CustomKeyboard:  replyKeyboard,
+			},
 		},
 	)
 }
@@ -114,8 +141,16 @@ func main() {
 			continue
 		}
 
+		trackTitle := getTrackTitle(&suggestions[0])
+
+		if len(suggestions) > 1 && trackTitle != messageText {
+			sendSuggestions(bot, &message, messageText, &suggestions)
+			continue
+		}
+
 		track := suggestions[0]
 		track.FetchLyrics()
 		sendLyrics(bot, &message, &track)
+		continue
 	}
 }

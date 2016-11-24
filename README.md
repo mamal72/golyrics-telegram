@@ -25,7 +25,9 @@ BOT_TOKEN=YOUR_BOT_TOKEN golyrics-telegram
 
 ## Screenshot
 
-<img src="https://cdn.rawgit.com/mamal72/golyrics-telegram/master/screenshot.png" alt="golyrics-telegram">
+<img src="https://cdn.rawgit.com/mamal72/golyrics-telegram/master/screenshot.png" width="400px" alt="golyrics-telegram">
+<br>
+<img src="https://cdn.rawgit.com/mamal72/golyrics-telegram/master/screenshot2.png" width="400px" alt="golyrics-telegram">
 
 
 ## Development
