@@ -4,7 +4,7 @@
 # golyrics-telegram
 A simple Telegram lyrics bot based on [golyrics](https://github.com/mamal72/golyrics).
 
-There's a working demo running [here](https://telegram.me/GoLyricsBot). I may stop it or not; No guaranty! 🤖
+There's a working demo running [here](https://telegram.me/GolyricsBot). I may stop it or not; No guaranty! 🤖
 
 
 ## Installation
